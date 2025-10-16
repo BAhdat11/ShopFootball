@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - FootballStore</title>
+    <!-- Подключаем шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Подключаем CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <!-- Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">⚽ FootballStore</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="catalog.html">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                
+                <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="cart.html">Cart 🛒</a></li>
+                <li class="nav-item">
+    <button class="nav-link btn btn-link text-white" onclick="changeBackgroundColor()">
+        🎨 Change Color
+    </button>
+</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bootstrap Container -->
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <!-- Заголовок страницы -->
+                <h2 class="text-center mb-4">About Our Store</h2>
+                
+                <!-- Основная информация -->
+                <div class="row about-section">
+                    <div class="col-lg-6 about-text">
+                        <h3>Our Story</h3>
+                        <p>FootballStore was founded in 2020 by a group of football enthusiasts. We started with a small store in the city center and grew into a major online football gear marketplace.</p>
+                        
+                        <h3>Our Mission</h3>
+                        <p>We provide quality football equipment and accessories for professional players and amateurs. Every product undergoes strict quality control.</p>
+                        
+                        <h3>Why Choose Us?</h3>
+                        <ul class="advantages-list">
+                            <li>✅ Only original products</li>
+                            <li>✅ Fast delivery across Kazakhstan</li>
+                            <li>✅ Competitive prices</li>
+                            <li>✅ Professional consultations</li>
+                            <li>✅ Warranty on all products</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-lg-6 about-image">
+                        <img src="https://via.placeholder.com/400x300?text=Our+Store" alt="Our store" class="img-fluid rounded">
+                    </div>
+                </div>
+
+                <!-- Секция команды -->
+              <div class="team-section mt-5">
+    <h3 class="text-center mb-4">Our Team</h3>
+    <div class="row team-grid">
+        <div class="col-md-4 team-member">
+            <img src="PHOTO.jpg" alt="Bagdat A." class="member-photo mx-auto">
+            <h4 class="text-center mt-3">Bagdat A.</h4>
+            <p class="text-center">Founder & Director</p>
+        </div>
+        <div class="col-md-4 team-member">
+            <img src="PHOTO.jpg" alt="Danyial E." class="member-photo mx-auto">
+            <h4 class="text-center mt-3">Danyial E.</h4>
+            <p class="text-center">Purchasing Manager</p>
+        </div>
+    </div>
+</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Подвал сайта -->
+    <footer class="main-footer">
+        <div class="team-members">
+           <h4>Our Team: Olimp</h4>
+            <p>Bagdat A. & Daniyal E.</p>
+        </div>
+        
+        <p>&copy; 2025 FootballStore. All rights reserved.</p>
+        <p id="currentDateTime" class="mb-2"></p>
+    </footer>
+    <script src="jv/script.js"></script>
+    
+
+</body>
+</html>

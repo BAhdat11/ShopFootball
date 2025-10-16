@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - FootballStore</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">⚽ FootballStore</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="catalog.html">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                
+                <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="cart.html">Cart 🛒</a></li>
+                <li class="nav-item">
+    <button class="nav-link btn btn-link text-white" onclick="changeBackgroundColor()">
+        🎨 Change Color
+    </button>
+</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center mb-3">Products Gallery</h2>
+                <p class="text-center text-muted mb-5">View our products from different angles and colors</p>
+                
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="gallery-item position-relative overflow-hidden rounded shadow">
+                            <img src="https://store.fcbarcelona.com/cdn/shop/files/imagen_3.jpg?v=1730388363&width=990" class="img-fluid w-100" alt="Jersey close up">
+                            <div class="image-caption position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-3 text-center">
+                                Barcelona Jersey - Front View
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="gallery-item position-relative overflow-hidden rounded shadow">
+                            <img src="https://tse3.mm.bing.net/th/id/OIP.kS0hNcza0lF8HI1UjqyzBgHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" class="img-fluid w-100" alt="Jersey back view">
+                            <div class="image-caption position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-3 text-center">
+                                Real Madrid Jersey
+
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="gallery-item position-relative overflow-hidden rounded shadow">
+                            <img src="https://th.bing.com/th/id/R.df1dc104826ce761849be70d4638f747?rik=vZpPnIQYsOKp%2bQ&pid=ImgRaw&r=0" class="img-fluid w-100" alt="Soccer ball">
+                            <div class="image-caption position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-3 text-center">
+                                Professional Soccer Ball
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="gallery-item position-relative overflow-hidden rounded shadow">
+                            <img src="https://i.pinimg.com/originals/44/0f/d0/440fd0241ece5c4d9835eb6eebc89251.jpg" class="img-fluid w-100" alt="Cleats side view">
+                            <div class="image-caption position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-3 text-center">
+                                Cleats - Side View
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="gallery-item position-relative overflow-hidden rounded shadow">
+                            <img src="https://tse4.mm.bing.net/th/id/OIP.sZGIn1j42EE0gntL9BasJAHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" class="img-fluid w-100" alt="Full kit">
+                            <div class="image-caption position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-3 text-center">
+                                Complete Kit Set
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="gallery-item position-relative overflow-hidden rounded shadow">
+                            <img src="https://tse3.mm.bing.net/th/id/OIP.-cchHEaEnNnz4VKU-s7sKQHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" class="img-fluid w-100" alt="Football accessories">
+                            <div class="image-caption position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-3 text-center">
+                                goalkeeper gear 
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="gallery-item position-relative overflow-hidden rounded shadow">
+                            <img src="https://th.bing.com/th/id/R.3009dfa7f3b3f0f2fb15ddce7973b184?rik=rms76RaAhmBJ3Q&riu=http%3a%2f%2fcanitbesaturdaynow.com%2fimages%2ffpics%2f2089%2f1fdf92f9e16c6fe3665e76d4461f8971.jpg&ehk=SsOpH8nFykqYcPzPJgKiirK%2f1rEd%2bWsl5ING0hyLlUk%3d&risl=&pid=ImgRaw&r=0" class="img-fluid w-100" alt="Jersey in packaging">
+                            <div class="image-caption position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-3 text-center">
+                                Alianz Arean
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="https://tse1.mm.bing.net/th/id/OIP.X4qEsrxd7FywALcI5-rMewHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Football Socks">
+                            <img src="" class="img-fluid w-100" alt="Different sizes">
+                            <div class="image-caption position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-3 text-center">
+                                Socks
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="gallery-item position-relative overflow-hidden rounded shadow">
+                            <img src="https://kff.kz/uploads/images/2018/11/19/5bf2687307404.jpg" class="img-fluid w-100" alt="Club merchandise">
+                            <div class="image-caption position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-3 text-center">
+                                Team Kazakhstan
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="team-members">
+            <h4>Our Team:Olimp</h4>
+            <p>Bagdat A. & Daniyal E.</p>
+        </div>
+        <p id="currentDateTime" class="mb-2"></p>
+        <p>&copy; 2025 FootballStore. All rights reserved.</p>
+    </footer>
+
+    <script src="jv/script.js"></script>
+</body>
+</html>
