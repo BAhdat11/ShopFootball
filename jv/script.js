@@ -63,8 +63,6 @@ function validatePhone(phone) {
 // CART //
 
 // Функции для корзины
-
-// Добавить в корзину
 function addToCart(name, price) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let item = cart.find(item => item.name === name);
@@ -258,11 +256,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Если все ок
+            
             alert(`Thank you ${name}! You've successfully subscribed to our newsletter.`);
             subscriptionForm.reset();
             
-            // Закрываем модальное окно
+            
             const modal = bootstrap.Modal.getInstance(document.getElementById('subscriptionModal'));
             if (modal) {
                 modal.hide();
@@ -271,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Функция для проверки email (убедись что она есть)
+// Функция для проверки email 
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -315,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDateTime();
     setInterval(updateDateTime, 1000); // Обновлять каждую секунду
 });
-// ===== PRODUCT SEARCH =====
+//  PRODUCT SEARCH 
 
 // Функция поиска товаров
 function searchProducts() {
@@ -335,7 +333,7 @@ function searchProducts() {
         }
     });
 
-    // Показываем сообщение если нет результатов
+    // Показываем сообщение если нет результато
     const noResults = document.getElementById('noResults');
     if (noResults) {
         noResults.style.display = foundResults ? 'none' : 'block';
@@ -345,5 +343,5 @@ function searchProducts() {
 // Очистка поиска
 function clearSearch() {
     document.getElementById('searchInput').value = '';
-    searchProducts(); // Показываем все товары
+    searchProducts(); 
 }
