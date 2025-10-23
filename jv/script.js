@@ -624,7 +624,7 @@ document.addEventListener('keydown', function(event) {
             break;
     }
 });
-// ===== PRODUCT FILTERING WITH SWITCH =====
+//  PRODUCT FILTERING WITH SWITCH 
 function filterProducts(category) {
     const products = document.querySelectorAll('.product-card');
     
@@ -670,22 +670,22 @@ function filterProducts(category) {
     
     playSound('click');
 }
-// ===== PLAY SOUNDS - ТОЛЬКО НУЖНЫЕ ЗВУКИ =====
+// PLAY SOUNDS - ТОЛЬКО НУЖНЫЕ ЗВУКИ
 function playSound(type) {
     try {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         
         switch(type) {
             case 'addToCart':
-                playBeepSound(audioContext, 1000, 0.3); // Приятный звук добавления
+                playBeepSound(audioContext, 1000, 0.3); 
                 break;
                 
             case 'success':
-                playBeepSound(audioContext, 1200, 0.4); // Радостный успех
+                playBeepSound(audioContext, 1200, 0.4); 
                 break;
                 
             default:
-                return; // Никаких других звуков
+                return; 
         }
     } catch (e) {
         console.log("🔇 Sounds not available");
@@ -709,7 +709,7 @@ function playBeepSound(audioContext, frequency, duration) {
     oscillator.stop(audioContext.currentTime + duration);
 }
 
-// ===== ЗВУК ПРИ ДОБАВЛЕНИИ В КОРЗИНУ =====
+//  ЗВУК ПРИ ДОБАВЛЕНИИ В КОРЗИН
 function addToCart(name, price) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let item = cart.find(item => item.name === name);
@@ -723,48 +723,47 @@ function addToCart(name, price) {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCounter();
     
-    // 🔥 ЗВУК ДОБАВЛЕНИЯ В КОРЗИНУ
+    
     playSound('addToCart');
     
     alert(`✅ ${name} added to cart!`);
 }
 
-// ===== ЗВУК ПРИ СМЕНЕ СТРАНИЦ =====
+//ЗВУК ПРИ СМЕНЕ СТРАНИЦ 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("🔊 Sound system activated!");
     
     // Звук при клике на навигационные ссылки (смена страниц)
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function() {
-            playSound('success'); // Используем success звук для смены страниц
+            playSound('success'); 
         });
     });
 });
 
-// ===== ЗВУК УСПЕХА ДЛЯ ФОРМ =====
-// В контактной форме оставляем только success звук
+
 function onSuccess(response) {
     console.log("✅ Форма отправлена:", response);
     showFormLoading(false);
     showSuccessMessage();
     form.reset();
-    playSound('success'); // Звук успеха
+    playSound('success'); 
 }
 
 function onError(error) {
     console.log("❌ Ошибка отправки:", error);
     showFormLoading(false);
     showErrorMessage();
-    // БЕЗ ЗВУКА ДЛЯ ОШИБКИ
+    
 }
 
-// ===== ТЕСТОВАЯ КНОПКА =====
+//  ТЕСТОВАЯ КНОПКА 
 function testSounds() {
     console.log("🔊 Testing sounds...");
     playSound('addToCart');
     setTimeout(() => playSound('success'), 500);
 }
-// ===== SOUND TOGGLE SYSTEM =====
+//  SOUND TOGGLE SYSTEM
 let soundEnabled = true;
 
 function toggleSound() {
@@ -781,7 +780,7 @@ function toggleSound() {
 
 // ===== PLAY SOUNDS - С ПРОВЕРКОЙ =====
 function playSound(type) {
-    if (!soundEnabled) return; // 🔥 ВЫХОДИМ ЕСЛИ ЗВУК ВЫКЛЮЧЕН
+    if (!soundEnabled) return; //
     
     try {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -818,4 +817,3 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("🔊 Sound system ready:", soundEnabled ? "ON" : "OFF");
 });
 
-// Остальные функции (addToCart, playBeepSound, testSounds) остаются без изменений
