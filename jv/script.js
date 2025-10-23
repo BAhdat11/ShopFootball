@@ -202,11 +202,8 @@ function validatePhone(phone) {
 // CART /
 
 // Функции для корзины
-<<<<<<< HEAD
 
     // ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ ADD TO CART =====
-=======
->>>>>>> 93587b87c1899157a3424f938e9174bee36ae162
 function addToCart(name, price) {
     // Получаем корзину из Local Storage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -447,11 +444,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-<<<<<<< HEAD
         
-=======
-            
->>>>>>> 93587b87c1899157a3424f938e9174bee36ae162
             alert(`Thank you ${name}! You've successfully subscribed to our newsletter.`);
             subscriptionForm.reset();
             
@@ -508,13 +501,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDateTime();
     setInterval(updateDateTime, 1000); // Обновлять каждую секунду
 });
-<<<<<<< HEAD
 // ===== PRODUCT SEARCH =====
-=======
-//  PRODUCT SEARCH 
-
-// Функция поиска товаров
->>>>>>> 93587b87c1899157a3424f938e9174bee36ae162
 function searchProducts() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
     const productCards = document.querySelectorAll('.product-card');
@@ -532,7 +519,7 @@ function searchProducts() {
         }
     });
 
-    // Показываем сообщение если нет результато
+    // Показываем сообщение если нет результатов
     const noResults = document.getElementById('noResults');
     if (noResults) {
         noResults.style.display = foundResults ? 'none' : 'block';
@@ -780,64 +767,21 @@ function testSounds() {
 // ===== SOUND TOGGLE SYSTEM =====
 let soundEnabled = true;
 
-// Функция переключения звука
 function toggleSound() {
     soundEnabled = !soundEnabled;
-    updateSoundIcon();
-    saveSoundSetting();
+    localStorage.setItem('soundEnabled', soundEnabled);
     
-    // Показываем уведомление
-    showSoundNotification();
-    
-    console.log(soundEnabled ? "🔊 Sound ON" : "🔇 Sound OFF");
-}
-
-// Обновление иконки звука
-function updateSoundIcon() {
     const soundIcon = document.getElementById('soundIcon');
     if (soundIcon) {
         soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
     }
-}
-
-// Сохранение настройки в Local Storage
-function saveSoundSetting() {
-    localStorage.setItem('soundEnabled', soundEnabled);
-}
-
-// Загрузка настройки из Local Storage
-function loadSoundSetting() {
-    const saved = localStorage.getItem('soundEnabled');
-    if (saved !== null) {
-        soundEnabled = saved === 'true';
-    }
-    updateSoundIcon();
-}
-
-// Показ уведомления о переключении звука
-function showSoundNotification() {
-    // Создаем временное уведомление
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${soundEnabled ? 'success' : 'warning'} alert-dismissible fade show position-fixed`;
-    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 200px;';
-    notification.innerHTML = `
-        <strong>${soundEnabled ? '🔊 Sound ON' : '🔇 Sound OFF'}</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
     
-    document.body.appendChild(notification);
-    
-    // Автоматически скрываем через 2 секунды
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
-    }, 2000);
+    alert(soundEnabled ? "🔊 Sound ON" : "🔇 Sound OFF");
 }
 
-// Обновленная функция playSound с проверкой
+// ===== PLAY SOUNDS - С ПРОВЕРКОЙ =====
 function playSound(type) {
-    if (!soundEnabled) return; // 🔥 Выходим если звук выключен
+    if (!soundEnabled) return; // 🔥 ВЫХОДИМ ЕСЛИ ЗВУК ВЫКЛЮЧЕН
     
     try {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -846,11 +790,9 @@ function playSound(type) {
             case 'addToCart':
                 playBeepSound(audioContext, 1000, 0.3);
                 break;
-                
             case 'success':
                 playBeepSound(audioContext, 1200, 0.4);
                 break;
-                
             default:
                 return;
         }
@@ -859,8 +801,21 @@ function playSound(type) {
     }
 }
 
-// Инициализация при загрузке
+// ===== ИНИЦИАЛИЗАЦИЯ =====
 document.addEventListener('DOMContentLoaded', function() {
-    loadSoundSetting(); // Загружаем настройку звука
-    console.log("🔊 Sound system ready. Sound is:", soundEnabled ? "ON" : "OFF");
+    // Загружаем настройку звука
+    const savedSound = localStorage.getItem('soundEnabled');
+    if (savedSound !== null) {
+        soundEnabled = savedSound === 'true';
+    }
+    
+    // Обновляем иконку
+    const soundIcon = document.getElementById('soundIcon');
+    if (soundIcon) {
+        soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+    }
+    
+    console.log("🔊 Sound system ready:", soundEnabled ? "ON" : "OFF");
 });
+
+// Остальные функции (addToCart, playBeepSound, testSounds) остаются без изменений
