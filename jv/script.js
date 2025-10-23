@@ -202,8 +202,11 @@ function validatePhone(phone) {
 // CART /
 
 // Функции для корзины
+<<<<<<< HEAD
 
     // ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ ADD TO CART =====
+=======
+>>>>>>> 93587b87c1899157a3424f938e9174bee36ae162
 function addToCart(name, price) {
     // Получаем корзину из Local Storage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -444,7 +447,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+<<<<<<< HEAD
         
+=======
+            
+>>>>>>> 93587b87c1899157a3424f938e9174bee36ae162
             alert(`Thank you ${name}! You've successfully subscribed to our newsletter.`);
             subscriptionForm.reset();
             
@@ -501,7 +508,13 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDateTime();
     setInterval(updateDateTime, 1000); // Обновлять каждую секунду
 });
+<<<<<<< HEAD
 // ===== PRODUCT SEARCH =====
+=======
+//  PRODUCT SEARCH 
+
+// Функция поиска товаров
+>>>>>>> 93587b87c1899157a3424f938e9174bee36ae162
 function searchProducts() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
     const productCards = document.querySelectorAll('.product-card');
@@ -519,7 +532,7 @@ function searchProducts() {
         }
     });
 
-    // Показываем сообщение если нет результатов
+    // Показываем сообщение если нет результато
     const noResults = document.getElementById('noResults');
     if (noResults) {
         noResults.style.display = foundResults ? 'none' : 'block';
