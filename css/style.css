@@ -705,3 +705,273 @@ h3 { font-size: 1.3rem; }
     cursor: pointer;
     flex: 1;
 }
+/* Dark Theme Styles */
+body.dark-theme {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+body.dark-theme .navbar {
+    background-color: #2d2d2d !important;
+}
+
+body.dark-theme .card {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border-color: #444;
+}
+
+body.dark-theme .btn-outline-success {
+    border-color: #28a745;
+    color: #28a745;
+}
+
+body.dark-theme .btn-outline-success:hover {
+    background-color: #28a745;
+    color: #000;
+}
+
+body.dark-theme .main-footer {
+    background-color: #2d2d2d;
+    color: #ccc;
+}
+/* Read More Styles */
+.product-description {
+    margin: 10px 0;
+}
+
+.short-text {
+    margin-bottom: 5px;
+}
+
+.full-text {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border-left: 3px solid #28a745;
+}
+
+.dark-theme .full-text {
+    background-color: #2d2d2d;
+    border-left-color: #ffc107;
+}
+
+.read-more-btn {
+    color: #28a745;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.read-more-btn:hover {
+    color: #218838;
+}
+
+.dark-theme .read-more-btn {
+    color: #ffc107;
+}
+
+.dark-theme .read-more-btn:hover {
+    color: #e0a800;
+}
+/* ===== ANIMATIONS ===== */
+
+/* Анимация появления элементов */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Анимации для карточек товаров */
+.product-card {
+    animation: fadeInUp 0.6s ease-out;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Анимации для кнопок */
+.btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn:active {
+    animation: bounce 0.3s;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* Анимация для кнопок добавления в корзину */
+.btn-success::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.btn-success:hover::after {
+    width: 100px;
+    height: 100px;
+}
+
+/* Анимация для навигации */
+.navbar-brand {
+    animation: pulse 2s infinite;
+}
+
+.nav-link {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+    width: 80%;
+}
+
+/* Анимация для фильтров */
+.filters .btn {
+    transition: all 0.3s ease;
+}
+
+.filters .btn:hover {
+    transform: scale(1.05);
+}
+
+.filters .btn.active {
+    animation: pulse 1s;
+}
+
+/* Анимация для поиска */
+#searchInput {
+    transition: all 0.3s ease;
+}
+
+#searchInput:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+/* Анимация для Read More */
+.read-more-btn {
+    transition: all 0.3s ease;
+}
+
+.read-more-btn:hover {
+    transform: translateX(5px);
+}
+
+/* Анимация для картинок товаров */
+.card-img-top {
+    transition: all 0.3s ease;
+}
+
+.card-img-top:hover {
+    transform: scale(1.05);
+}
+
+/* Анимация для темы */
+#themeIcon {
+    transition: transform 0.3s ease;
+}
+
+#themeIcon:hover {
+    transform: rotate(180deg);
+}
+
+/* Анимация для счетчика корзины */
+.cart-counter {
+    animation: bounce 0.5s;
+    display: inline-block;
+}
+
+/* Анимация для уведомлений */
+.alert {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Темная тема анимации */
+.dark-theme .product-card:hover {
+    box-shadow: 0 10px 25px rgba(255,255,255,0.1);
+}
+
+.dark-theme .btn:hover {
+    box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+}

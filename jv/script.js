@@ -1,5 +1,5 @@
 // CONTACT //
-// Валидация формы обратной связи
+// Асинхронная отправка формы с Callback функциями
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('feedbackForm');
     
@@ -34,13 +34,158 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Message must contain at least 10 characters');
                 return;
             }
+
+            // Показываем загрузку
+            showFormLoading(true);
             
-            
-            alert('Thank you! Your message has been sent. We will contact you soon.');
-            form.reset();
+            // Данные формы
+            const formData = {
+                name: name,
+                email: email,
+                phone: phone,
+                message: message,
+                timestamp: new Date().toISOString()
+            };
+
+            // Callback функция при успешной отправке
+            function onSuccess(response) {
+                console.log("✅ Форма отправлена:", response);
+                showFormLoading(false);
+                showSuccessMessage();
+                form.reset();
+                playSound('success');
+            }
+
+            // Callback функция при ошибке
+            function onError(error) {
+                console.log("❌ Ошибка отправки:", error);
+                showFormLoading(false);
+                showErrorMessage();
+                playSound('error');
+            }
+
+            // Отправляем форму с callback функциями
+            submitContactForm(formData, onSuccess, onError);
         });
     }
 });
+
+// ===== CALLBACK ФУНКЦИИ =====
+
+// Функция отправки формы (симуляция асинхронного запроса)
+function submitContactForm(formData, successCallback, errorCallback) {
+    console.log("🔄 Отправка данных...", formData);
+    
+    // Создаем промис для асинхронной операции
+    const submissionPromise = new Promise((resolve, reject) => {
+        // Симуляция задержки сети 2 секунды
+        setTimeout(() => {
+            // 85% шанс успеха, 15% шанс ошибки (для демонстрации)
+            const isSuccess = Math.random() > 0.15;
+            
+            if (isSuccess) {
+                resolve({
+                    status: 'success',
+                    messageId: 'msg_' + Date.now(),
+                    timestamp: new Date().toLocaleString(),
+                    data: formData
+                });
+            } else {
+                reject({
+                    status: 'error',
+                    errorCode: 'NETWORK_ERROR',
+                    message: 'Connection failed. Please try again.',
+                    timestamp: new Date().toLocaleString()
+                });
+            }
+        }, 2000);
+    });
+
+    // Обрабатываем результат с callback функциями
+    submissionPromise
+        .then(result => {
+            successCallback(result);
+        })
+        .catch(error => {
+            errorCallback(error);
+        });
+}
+
+// Функция показа загрузки
+function showFormLoading(show) {
+    const submitBtn = document.querySelector('#feedbackForm button[type="submit"]');
+    if (submitBtn) {
+        if (show) {
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
+            submitBtn.disabled = true;
+            submitBtn.classList.add('sending');
+        } else {
+            submitBtn.innerHTML = 'Send Message';
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('sending');
+        }
+    }
+}
+
+// Функция показа успешного сообщения
+function showSuccessMessage() {
+    // Создаем красивый alert
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        <strong>✅ Success!</strong> Thank you! Your message has been sent. We will contact you soon.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    // Вставляем перед формой
+    const form = document.getElementById('feedbackForm');
+    form.parentNode.insertBefore(alertDiv, form);
+    
+    // Автоматически скрываем через 5 секунд
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+
+// Функция показа ошибки
+function showErrorMessage() {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        <strong>❌ Error!</strong> Sorry, there was a problem sending your message. Please try again.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const form = document.getElementById('feedbackForm');
+    form.parentNode.insertBefore(alertDiv, form);
+    
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+
+// Функция для звуков (добавь звуковые файлы в папку sounds/)
+function playSound(type) {
+    try {
+        const audio = new Audio();
+        switch(type) {
+            case 'success':
+                // Можно добавить звук успеха
+                console.log("🔊 Success sound played");
+                break;
+            case 'error':
+                // Можно добавить звук ошибки
+                console.log("🔊 Error sound played");
+                break;
+        }
+    } catch (e) {
+        console.log("Sound not available:", e);
+    }
+}
 
 // Функция для проверки email
 function validateEmail(email) {
@@ -50,37 +195,69 @@ function validateEmail(email) {
 
 // Функция для проверки номера телефона
 function validatePhone(phone) {
-    
     const cleanedPhone = phone.replace(/[\s\(\)\-]/g, '');
-    
-    // Проверяем разные форматы:
-    // +7XXXXXXXXXX, 8XXXXXXXXXX, 7XXXXXXXXXX
     const phoneRegex = /^(\+7|8|7)?\d{10}$/;
-    
     return phoneRegex.test(cleanedPhone);
 }
-
-// CART //
+// CART /
 
 // Функции для корзины
 
-// Добавить в корзину
+    // ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ ADD TO CART =====
 function addToCart(name, price) {
+    // Получаем корзину из Local Storage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Ищем товар в корзине
     let item = cart.find(item => item.name === name);
     
     if (item) {
+        // Если товар уже есть - увеличиваем количество
         item.quantity += 1;
     } else {
-        cart.push({ name: name, price: price, quantity: 1 });
+        // Если товара нет - добавляем новый
+        cart.push({ 
+            name: name, 
+            price: price, 
+            quantity: 1 
+        });
     }
     
+    // Сохраняем корзину
     localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Обновляем счетчик корзины
     updateCartCounter();
+    
+    // Анимация кнопки (если есть event)
+    if (event && event.target) {
+        animateAddToCart(event.target);
+    }
+    
+    // Сообщение об успехе
     alert(`✅ ${name} added to cart!`);
 }
 
-// Обновить счетчик
+// ===== АНИМАЦИЯ ДОБАВЛЕНИЯ В КОРЗИНУ =====
+function animateAddToCart(button) {
+    // Сохраняем оригинальный текст и стили
+    const originalText = button.innerHTML;
+    const originalBackground = button.style.backgroundColor;
+    
+    // Анимация
+    button.style.animation = 'bounce 0.5s';
+    button.style.backgroundColor = '#28a745';
+    button.innerHTML = '✅ Added!';
+    
+    // Возвращаем обратно через 1 секунду
+    setTimeout(() => {
+        button.style.animation = '';
+        button.style.backgroundColor = originalBackground;
+        button.innerHTML = originalText;
+    }, 1000);
+}
+
+// ===== ОБНОВЛЕННЫЙ СЧЕТЧИК КОРЗИНЫ =====
 function updateCartCounter() {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -88,9 +265,18 @@ function updateCartCounter() {
     let cartLink = document.querySelector('a[href="cart.html"]');
     if (cartLink) {
         cartLink.innerHTML = totalItems > 0 ? `Cart 🛒 (${totalItems})` : 'Cart 🛒';
+        
+        // Анимация счетчика
+        if (totalItems > 0) {
+            cartLink.style.animation = 'pulse 0.5s';
+            setTimeout(() => {
+                cartLink.style.animation = '';
+            }, 500);
+        }
     }
 }
 
+// Остальные функции остаются без изменений
 // Показать корзину
 function displayCart() {
     let container = document.getElementById('cartItemsContainer');
@@ -258,11 +444,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Если все ок
+        
             alert(`Thank you ${name}! You've successfully subscribed to our newsletter.`);
             subscriptionForm.reset();
             
-            // Закрываем модальное окно
+            
             const modal = bootstrap.Modal.getInstance(document.getElementById('subscriptionModal'));
             if (modal) {
                 modal.hide();
@@ -271,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Функция для проверки email (убедись что она есть)
+// Функция для проверки email 
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -316,8 +502,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateDateTime, 1000); // Обновлять каждую секунду
 });
 // ===== PRODUCT SEARCH =====
-
-// Функция поиска товаров
 function searchProducts() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
     const productCards = document.querySelectorAll('.product-card');
@@ -325,7 +509,7 @@ function searchProducts() {
 
     productCards.forEach(card => {
         const productName = card.querySelector('.card-title').textContent.toLowerCase();
-        const productDescription = card.querySelector('.card-text').textContent.toLowerCase();
+        const productDescription = card.querySelector('.product-description .short-text').textContent.toLowerCase();
         
         if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
             card.style.display = 'block';
@@ -340,10 +524,330 @@ function searchProducts() {
     if (noResults) {
         noResults.style.display = foundResults ? 'none' : 'block';
     }
+    
+    playSound('click');
 }
 
 // Очистка поиска
 function clearSearch() {
     document.getElementById('searchInput').value = '';
-    searchProducts(); // Показываем все товары
+    searchProducts(); 
 }
+// ===== DAY/NIGHT THEME =====
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if (body.classList.contains('dark-theme')) {
+        // Switch to light theme
+        body.classList.remove('dark-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        // Switch to dark theme
+        body.classList.add('dark-theme');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        document.getElementById('themeIcon').textContent = '☀️';
+    }
+});
+// ===== READ MORE BUTTON =====
+function toggleReadMore(button) {
+    const description = button.closest('.product-description');
+    const shortText = description.querySelector('.short-text');
+    const fullText = description.querySelector('.full-text');
+    const isExpanded = fullText.style.display === 'block';
+    
+    if (isExpanded) {
+        // Collapse
+        fullText.style.display = 'none';
+        shortText.style.display = 'block';
+        button.textContent = 'Read More ▼';
+    } else {
+        // Expand
+        fullText.style.display = 'block';
+        shortText.style.display = 'none';
+        button.textContent = 'Read Less ▲';
+    }
+    
+    
+}
+// ===== RESET FORM BUTTON =====
+function resetContactForm() {
+    document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(input => {
+        input.value = '';
+    });
+    alert('Form has been reset!');
+    playSound('click');
+}
+// ===== KEYBOARD NAVIGATION =====
+document.addEventListener('keydown', function(event) {
+    const menuItems = document.querySelectorAll('.navbar-nav .nav-link');
+    let currentIndex = -1;
+    
+    // Найти текущий активный элемент
+    menuItems.forEach((item, index) => {
+        if (document.activeElement === item) {
+            currentIndex = index;
+        }
+    });
+    
+    switch(event.key) {
+        case 'ArrowRight':
+            event.preventDefault();
+            currentIndex = (currentIndex + 1) % menuItems.length;
+            menuItems[currentIndex].focus();
+            playSound('click');
+            break;
+            
+        case 'ArrowLeft':
+            event.preventDefault();
+            currentIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
+            menuItems[currentIndex].focus();
+            playSound('click');
+            break;
+            
+        case 'Enter':
+            if (document.activeElement.classList.contains('nav-link')) {
+                event.preventDefault();
+                document.activeElement.click();
+                playSound('click');
+            }
+            break;
+    }
+});
+// ===== PRODUCT FILTERING WITH SWITCH =====
+function filterProducts(category) {
+    const products = document.querySelectorAll('.product-card');
+    
+    // Обновляем активную кнопку
+    document.querySelectorAll('.filters .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Фильтрация через switch statement
+    products.forEach(product => {
+        let showProduct = false;
+        
+        switch(category) {
+            case 'all':
+                showProduct = true;
+                break;
+                
+            case 'jerseys':
+                showProduct = product.querySelector('.card-title').textContent.includes('Jersey') || 
+                             product.querySelector('.card-title').textContent.includes('Kit');
+                break;
+                
+            case 'balls':
+                showProduct = product.querySelector('.card-title').textContent.includes('Ball');
+                break;
+                
+            case 'cleats':
+                showProduct = product.querySelector('.card-title').textContent.includes('Cleats');
+                break;
+                
+            case 'accessories':
+                showProduct = product.querySelector('.card-title').textContent.includes('Socks') || 
+                             product.querySelector('.card-title').textContent.includes('Guards');
+                break;
+                
+            default:
+                showProduct = true;
+        }
+        
+        product.style.display = showProduct ? 'block' : 'none';
+    });
+    
+    playSound('click');
+}
+// ===== PLAY SOUNDS - ТОЛЬКО НУЖНЫЕ ЗВУКИ =====
+function playSound(type) {
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        switch(type) {
+            case 'addToCart':
+                playBeepSound(audioContext, 1000, 0.3); // Приятный звук добавления
+                break;
+                
+            case 'success':
+                playBeepSound(audioContext, 1200, 0.4); // Радостный успех
+                break;
+                
+            default:
+                return; // Никаких других звуков
+        }
+    } catch (e) {
+        console.log("🔇 Sounds not available");
+    }
+}
+
+function playBeepSound(audioContext, frequency, duration) {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = frequency;
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + duration);
+}
+
+// ===== ЗВУК ПРИ ДОБАВЛЕНИИ В КОРЗИНУ =====
+function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let item = cart.find(item => item.name === name);
+    
+    if (item) {
+        item.quantity += 1;
+    } else {
+        cart.push({ name: name, price: price, quantity: 1 });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCounter();
+    
+    // 🔥 ЗВУК ДОБАВЛЕНИЯ В КОРЗИНУ
+    playSound('addToCart');
+    
+    alert(`✅ ${name} added to cart!`);
+}
+
+// ===== ЗВУК ПРИ СМЕНЕ СТРАНИЦ =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🔊 Sound system activated!");
+    
+    // Звук при клике на навигационные ссылки (смена страниц)
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            playSound('success'); // Используем success звук для смены страниц
+        });
+    });
+});
+
+// ===== ЗВУК УСПЕХА ДЛЯ ФОРМ =====
+// В контактной форме оставляем только success звук
+function onSuccess(response) {
+    console.log("✅ Форма отправлена:", response);
+    showFormLoading(false);
+    showSuccessMessage();
+    form.reset();
+    playSound('success'); // Звук успеха
+}
+
+function onError(error) {
+    console.log("❌ Ошибка отправки:", error);
+    showFormLoading(false);
+    showErrorMessage();
+    // БЕЗ ЗВУКА ДЛЯ ОШИБКИ
+}
+
+// ===== ТЕСТОВАЯ КНОПКА =====
+function testSounds() {
+    console.log("🔊 Testing sounds...");
+    playSound('addToCart');
+    setTimeout(() => playSound('success'), 500);
+}
+// ===== SOUND TOGGLE SYSTEM =====
+let soundEnabled = true;
+
+// Функция переключения звука
+function toggleSound() {
+    soundEnabled = !soundEnabled;
+    updateSoundIcon();
+    saveSoundSetting();
+    
+    // Показываем уведомление
+    showSoundNotification();
+    
+    console.log(soundEnabled ? "🔊 Sound ON" : "🔇 Sound OFF");
+}
+
+// Обновление иконки звука
+function updateSoundIcon() {
+    const soundIcon = document.getElementById('soundIcon');
+    if (soundIcon) {
+        soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+    }
+}
+
+// Сохранение настройки в Local Storage
+function saveSoundSetting() {
+    localStorage.setItem('soundEnabled', soundEnabled);
+}
+
+// Загрузка настройки из Local Storage
+function loadSoundSetting() {
+    const saved = localStorage.getItem('soundEnabled');
+    if (saved !== null) {
+        soundEnabled = saved === 'true';
+    }
+    updateSoundIcon();
+}
+
+// Показ уведомления о переключении звука
+function showSoundNotification() {
+    // Создаем временное уведомление
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${soundEnabled ? 'success' : 'warning'} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 200px;';
+    notification.innerHTML = `
+        <strong>${soundEnabled ? '🔊 Sound ON' : '🔇 Sound OFF'}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Автоматически скрываем через 2 секунды
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 2000);
+}
+
+// Обновленная функция playSound с проверкой
+function playSound(type) {
+    if (!soundEnabled) return; // 🔥 Выходим если звук выключен
+    
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        switch(type) {
+            case 'addToCart':
+                playBeepSound(audioContext, 1000, 0.3);
+                break;
+                
+            case 'success':
+                playBeepSound(audioContext, 1200, 0.4);
+                break;
+                
+            default:
+                return;
+        }
+    } catch (e) {
+        console.log("🔇 Sounds not available");
+    }
+}
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    loadSoundSetting(); // Загружаем настройку звука
+    console.log("🔊 Sound system ready. Sound is:", soundEnabled ? "ON" : "OFF");
+});

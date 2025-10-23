@@ -27,6 +27,21 @@
                 <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
                 <li class="nav-item"><a class="nav-link" href="cart.html">Cart 🛒</a></li>
                 <li class="nav-item">
+    <button class="nav-link btn btn-link text-white" onclick="toggleSound()">
+        <span id="soundIcon">🔊</span> Sound
+    </button>
+</li>
+                
+                
+                <nav class="navbar...">
+    <!-- существующий код -->
+    <li class="nav-item">
+        <button class="nav-link btn btn-link text-white" onclick="toggleTheme()">
+            <span id="themeIcon">🌙</span> Theme
+        </button>
+    </li>
+</nav>
+                <li class="nav-item">
     <button class="nav-link btn btn-link text-white" onclick="changeBackgroundColor()">
         🎨 Change Color
     </button>
@@ -35,6 +50,8 @@
             </div>
         </div>
     </nav>
+    
+    
 
     <main class="container-fluid px-0">
         <!-- Hero Section with Bootstrap Carousel -->
@@ -51,14 +68,15 @@
                 </div>
             </div>
         </div>
-        <!-- Subscription Button -->
+        
 <div class="container text-center my-5">
     <button class="btn btn-outline-success btn-lg" data-bs-toggle="modal" data-bs-target="#subscriptionModal">
         📧 Subscribe to Newsletter
     </button>
 </div>
 
-<!-- Popup Modal -->
+
+
 <!-- Subscription Modal -->
 <div class="modal fade" id="subscriptionModal" tabindex="-1">
   <div class="modal-dialog">
@@ -97,7 +115,7 @@
                                     <h5 class="card-title">FC Barcelona Jersey</h5>
                                     <p class="card-text flex-grow-1">Original 2024 season jersey</p>
                                     
-                                    <!-- ДОБАВЛЕН BUTTON GROUP -->
+                                    
                                     <div class="btn-group w-100 mb-3" role="group">
                                         <button type="button" class="btn btn-outline-success btn-sm">S</button>
                                         <button type="button" class="btn btn-outline-success btn-sm active">M</button>
@@ -118,7 +136,7 @@
                                     <h5 class="card-title">Soccer Ball</h5>
                                     <p class="card-text flex-grow-1">Professional match ball</p>
                                     
-                                    <!-- ДОБАВЛЕН BUTTON GROUP -->
+                                    
                                     <div class="btn-group w-100 mb-3" role="group">
                                         <button type="button" class="btn btn-outline-success btn-sm">Size 4</button>
                                         <button type="button" class="btn btn-outline-success btn-sm active">Size 5</button>
@@ -138,7 +156,7 @@
                                     <h5 class="card-title">Football Cleats</h5>
                                     <p class="card-text flex-grow-1">Lightweight cleats for field</p>
                                     
-                                    <!-- ДОБАВЛЕН BUTTON GROUP -->
+                                    
                                     <div class="btn-group w-100 mb-3" role="group">
                                         <button type="button" class="btn btn-outline-success btn-sm">40</button>
                                         <button type="button" class="btn btn-outline-success btn-sm">42</button>

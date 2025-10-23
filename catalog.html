@@ -19,18 +19,26 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="catalog.html">Products</a></li>
-                <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
-                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                
-                <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-                <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="cart.html">Cart 🛒</a></li>
-                <li class="nav-item">
-    <button class="nav-link btn btn-link text-white" onclick="changeBackgroundColor()">
-        🎨 Change Color
-    </button>
-</li>
+                    <li class="nav-item"><a class="nav-link" href="catalog.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html">Cart 🛒</a></li>
+                    
+                    
+              
+                    
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link text-white" onclick="toggleTheme()">
+                            <span id="themeIcon">🌙</span> Theme
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link text-white" onclick="changeBackgroundColor()">
+                            🎨 Change Color
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -42,22 +50,51 @@
                 <h2 class="text-center mb-4">Products Catalog</h2>
                 
                 <div class="filters d-flex flex-wrap gap-2 mb-4 justify-content-center">
-                    <button class="btn btn-outline-success active">All Products</button>
-                    <button class="btn btn-outline-success">Jerseys</button>
-                    <button class="btn btn-outline-success">Balls</button>
-                    <button class="btn btn-outline-success">Cleats</button>
-                    <button class="btn btn-outline-success">Accessories</button>
+                    <button class="btn btn-outline-success active" onclick="filterProducts('all')" data-translate="allProducts">All Products</button>
+                    <button class="btn btn-outline-success" onclick="filterProducts('jerseys')" data-translate="jerseys">Jerseys</button>
+                    <button class="btn btn-outline-success" onclick="filterProducts('balls')" data-translate="balls">Balls</button>
+                    <button class="btn btn-outline-success" onclick="filterProducts('cleats')" data-translate="cleats">Cleats</button>
+                    <button class="btn btn-outline-success" onclick="filterProducts('accessories')" data-translate="accessories">Accessories</button>
+                </div>
+
+                <!-- Search Section -->
+                <div class="row mb-4">
+                    <div class="col-md-8 mx-auto">
+                        <div class="input-group">
+                            <input type="text" id="searchInput" class="form-control" 
+                                   placeholder="Search products..." onkeyup="searchProducts()" data-translate="searchProducts">
+                            <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()" data-translate="clear">
+                                Clear
+                            </button>
+                        </div>
+                        <div id="noResults" class="text-center mt-3" style="display:none;">
+                            <p class="text-muted">No products found. Try different keywords.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">
+                    <!-- FC Barcelona Jersey -->
                     <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
                         <div class="card product-card h-100">
                             <img src="https://store.fcbarcelona.com/cdn/shop/files/imagen_3.jpg?v=1730388363&width=990" class="card-img-top" alt="FC Barcelona Jersey">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">FC Barcelona Jersey</h5>
-                                <p class="card-text flex-grow-1">Original 2024 season jersey</p>
                                 
-                                <!-- ДОБАВЛЕН BUTTON GROUP -->
+                                <!-- READ MORE SECTION -->
+                                <div class="product-description">
+                                    <p class="short-text">Original 2024 season jersey with authentic design...</p>
+                                    <p class="full-text" style="display: none;">
+                                        🔥 Official FC Barcelona 2024 home jersey. Made with high-quality breathable fabric. 
+                                        Features: moisture-wicking technology, embroidered club badge, comfortable fit. 
+                                        Perfect for matches or casual wear. Available in all sizes.
+                                    </p>
+                                    <button class="btn btn-link p-0 read-more-btn" onclick="toggleReadMore(this)">
+                                        Read More ▼
+                                    </button>
+                                </div>
+                                <!-- END READ MORE -->
+                               
                                 <div class="btn-group w-100 mb-3" role="group">
                                     <button type="button" class="btn btn-outline-success btn-sm">S</button>
                                     <button type="button" class="btn btn-outline-success btn-sm active">M</button>
@@ -66,19 +103,32 @@
                                 </div>
                                 
                                 <p class="price text-success fw-bold fs-4">5,000 KZT</p>
-                                <button class="btn btn-success mt-auto" onclick="addToCart('FC Barcelona Jersey', 5000)">Add to Cart</button>
+                                <button class="btn btn-success mt-auto" onclick="addToCart('FC Barcelona Jersey', 5000)" data-translate="addToCart">Add to Cart</button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Soccer Ball -->
                     <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
                         <div class="card product-card h-100">
                             <img src="https://th.bing.com/th/id/R.df1dc104826ce761849be70d4638f747?rik=vZpPnIQYsOKp%2bQ&pid=ImgRaw&r=0" class="card-img-top" alt="Soccer Ball">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Soccer Ball</h5>
-                                <p class="card-text flex-grow-1">Professional match ball</p>
                                 
-                                <!-- ДОБАВЛЕН BUTTON GROUP -->
+                                <!-- READ MORE SECTION -->
+                                <div class="product-description">
+                                    <p class="short-text">Professional match ball for competitive games...</p>
+                                    <p class="full-text" style="display: none;">
+                                        ⚽ FIFA approved match ball. High-quality synthetic leather, perfect roundness, 
+                                        excellent bounce and flight characteristics. Water-resistant, durable construction. 
+                                        Suitable for professional matches and training.
+                                    </p>
+                                    <button class="btn btn-link p-0 read-more-btn" onclick="toggleReadMore(this)">
+                                        Read More ▼
+                                    </button>
+                                </div>
+                                <!-- END READ MORE -->
+                                
                                 <div class="btn-group w-100 mb-3" role="group">
                                     <button type="button" class="btn btn-outline-success btn-sm">Size 4</button>
                                     <button type="button" class="btn btn-outline-success btn-sm active">Size 5</button>
@@ -86,19 +136,32 @@
                                 </div>
                                 
                                 <p class="price text-success fw-bold fs-4">8,000 KZT</p>
-                                <button class="btn btn-success mt-auto" onclick="addToCart('Soccer Ball', 8000)">Add to Cart</button>
+                                <button class="btn btn-success mt-auto" onclick="addToCart('Soccer Ball', 8000)" data-translate="addToCart">Add to Cart</button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Football Cleats -->
                     <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
                         <div class="card product-card h-100">
                             <img src="https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/ae712493-97b6-4b1a-b7bb-902f3cc2d085/custom-phantom-luna-2-elite-by-you.png" class="card-img-top" alt="Football Cleats">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Football Cleats</h5>
-                                <p class="card-text flex-grow-1">Lightweight cleats for field</p>
                                 
-                                <!-- ДОБАВЛЕН BUTTON GROUP -->
+                                <!-- READ MORE SECTION -->
+                                <div class="product-description">
+                                    <p class="short-text">Lightweight cleats designed for maximum performance...</p>
+                                    <p class="full-text" style="display: none;">
+                                        👟 Premium football cleats with advanced traction system. Lightweight synthetic upper, 
+                                        cushioned insole, responsive stud configuration. Provides excellent grip, comfort, 
+                                        and ball control on natural grass surfaces.
+                                    </p>
+                                    <button class="btn btn-link p-0 read-more-btn" onclick="toggleReadMore(this)">
+                                        Read More ▼
+                                    </button>
+                                </div>
+                                <!-- END READ MORE -->
+                             
                                 <div class="btn-group w-100 mb-3" role="group">
                                     <button type="button" class="btn btn-outline-success btn-sm">40</button>
                                     <button type="button" class="btn btn-outline-success btn-sm">42</button>
@@ -107,19 +170,32 @@
                                 </div>
                                 
                                 <p class="price text-success fw-bold fs-4">12,000 KZT</p>
-                                <button class="btn btn-success mt-auto" onclick="addToCart('Football Cleats', 12000)">Add to Cart</button>
+                                <button class="btn btn-success mt-auto" onclick="addToCart('Football Cleats', 12000)" data-translate="addToCart">Add to Cart</button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Real Madrid Kit -->
                     <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
                         <div class="card product-card h-100">
                             <img src="https://tse3.mm.bing.net/th/id/OIP.kS0hNcza0lF8HI1UjqyzBgHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Real Madrid Kit">
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">Real Madrid Kit</h5>
-                                <p class="card-text flex-grow-1">Full game kit set</p>
+                                <h5 class="card-title">Real Madrid Jersey</h5>
                                 
-                                <!-- ДОБАВЛЕН BUTTON GROUP -->
+                                <!-- READ MORE SECTION -->
+                                <div class="product-description">
+                                    <p class="short-text">Full game kit set including jersey and shorts...</p>
+                                    <p class="full-text" style="display: none;">
+                                        ⚪ Official Real Madrid 2024 home kit. Complete set: jersey + shorts. 
+                                        Advanced fabric technology, ventilation panels, embroidered club crest. 
+                                        Authentic design worn by players. Perfect for fans and players alike.
+                                    </p>
+                                    <button class="btn btn-link p-0 read-more-btn" onclick="toggleReadMore(this)">
+                                        Read More ▼
+                                    </button>
+                                </div>
+                                <!-- END READ MORE -->
+                                
                                 <div class="btn-group w-100 mb-3" role="group">
                                     <button type="button" class="btn btn-outline-success btn-sm">S</button>
                                     <button type="button" class="btn btn-outline-success btn-sm active">M</button>
@@ -128,19 +204,32 @@
                                 </div>
                                 
                                 <p class="price text-success fw-bold fs-4">15,000 KZT</p>
-                                <button class="btn btn-success mt-auto" onclick="addToCart('Real Madrid Kit', 15000)">Add to Cart</button>
+                                <button class="btn btn-success mt-auto" onclick="addToCart('Real Madrid Kit', 15000)" data-translate="addToCart">Add to Cart</button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Football Socks -->
                     <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
                         <div class="card product-card h-100">
                             <img src="https://tse1.mm.bing.net/th/id/OIP.X4qEsrxd7FywALcI5-rMewHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Football Socks">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Football Socks</h5>
-                                <p class="card-text flex-grow-1">Comfortable game socks</p>
                                 
-                                <!-- ДОБАВЛЕН BUTTON GROUP -->
+                                <!-- READ MORE SECTION -->
+                                <div class="product-description">
+                                    <p class="short-text">Comfortable game socks with cushioning...</p>
+                                    <p class="full-text" style="display: none;">
+                                        🧦 High-performance football socks. Cushioned sole, arch support, moisture-wicking fabric. 
+                                        Elastic fit, reinforced heel and toe. Provides comfort and protection during intense matches. 
+                                        Available in multiple size ranges.
+                                    </p>
+                                    <button class="btn btn-link p-0 read-more-btn" onclick="toggleReadMore(this)">
+                                        Read More ▼
+                                    </button>
+                                </div>
+                                <!-- END READ MORE -->
+                                
                                 <div class="btn-group w-100 mb-3" role="group">
                                     <button type="button" class="btn btn-outline-success btn-sm">36-38</button>
                                     <button type="button" class="btn btn-outline-success btn-sm active">39-41</button>
@@ -148,19 +237,32 @@
                                 </div>
                                 
                                 <p class="price text-success fw-bold fs-4">1,500 KZT</p>
-                                <button class="btn btn-success mt-auto" onclick="addToCart('Football Socks', 1500)">Add to Cart</button>
+                                <button class="btn btn-success mt-auto" onclick="addToCart('Football Socks', 1500)" data-translate="addToCart">Add to Cart</button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Shin Guards -->
                     <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
                         <div class="card product-card h-100">
                             <img src="https://lovellcdn.b-cdn.net/products/2172187.jpg" class="card-img-top" alt="Shin Guards">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Shin Guards</h5>
-                                <p class="card-text flex-grow-1">Leg protection gear</p>
                                 
-                                <!-- ДОБАВЛЕН BUTTON GROUP -->
+                                <!-- READ MORE SECTION -->
+                                <div class="product-description">
+                                    <p class="short-text">Professional leg protection gear...</p>
+                                    <p class="full-text" style="display: none;">
+                                        🛡️ Advanced shin guards with impact protection technology. Lightweight design, 
+                                        comfortable fit, breathable material. Ankle protection, secure strap system. 
+                                        Meets safety standards for competitive football. Essential protective equipment.
+                                    </p>
+                                    <button class="btn btn-link p-0 read-more-btn" onclick="toggleReadMore(this)">
+                                        Read More ▼
+                                    </button>
+                                </div>
+                                <!-- END READ MORE -->
+                                
                                 <div class="btn-group w-100 mb-3" role="group">
                                     <button type="button" class="btn btn-outline-success btn-sm">S</button>
                                     <button type="button" class="btn btn-outline-success btn-sm active">M</button>
@@ -168,25 +270,10 @@
                                 </div>
                                 
                                 <p class="price text-success fw-bold fs-4">3,000 KZT</p>
-                                <button class="btn btn-success mt-auto" onclick="addToCart('Shin Guards', 3000)">Add to Cart</button>
+                                <button class="btn btn-success mt-auto" onclick="addToCart('Shin Guards', 3000)" data-translate="addToCart">Add to Cart</button>
                             </div>
                         </div>
                     </div>
-                    <!-- Search Section -->
-<div class="row mb-4">
-    <div class="col-md-8 mx-auto">
-        <div class="input-group">
-            <input type="text" id="searchInput" class="form-control" 
-                   placeholder="Search products..." onkeyup="searchProducts()">
-            <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">
-                Clear
-            </button>
-        </div>
-        <div id="noResults" class="text-center mt-3" style="display:none;">
-            <p class="text-muted">No products found. Try different keywords.</p>
-        </div>
-    </div>
-</div>
 
                 </div>
             </div>
