@@ -80,7 +80,7 @@ function submitContactForm(formData, successCallback, errorCallback) {
     const submissionPromise = new Promise((resolve, reject) => {
         // Симуляция задержки сети 2 секунды
         setTimeout(() => {
-            // 85% шанс успеха, 15% шанс ошибки (для демонстрации)
+    
             const isSuccess = Math.random() > 0.15;
             
             if (isSuccess) {
@@ -203,7 +203,7 @@ function validatePhone(phone) {
 
 // Функции для корзины
 
-    // ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ ADD TO CART =====
+    //  ФУНКЦИЯ ADD TO CART
 function addToCart(name, price) {
     // Получаем корзину из Local Storage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -234,8 +234,7 @@ function addToCart(name, price) {
         animateAddToCart(event.target);
     }
     
-    // Сообщение об успехе
-    alert(`✅ ${name} added to cart!`);
+ showSimpleNotification(`🛒 ${name} добавлен в корзину!`);
 }
 
 // ===== АНИМАЦИЯ ДОБАВЛЕНИЯ В КОРЗИНУ =====
@@ -501,38 +500,8 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDateTime();
     setInterval(updateDateTime, 1000); // Обновлять каждую секунду
 });
-// ===== PRODUCT SEARCH =====
-function searchProducts() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-    const productCards = document.querySelectorAll('.product-card');
-    let foundResults = false;
 
-    productCards.forEach(card => {
-        const productName = card.querySelector('.card-title').textContent.toLowerCase();
-        const productDescription = card.querySelector('.product-description .short-text').textContent.toLowerCase();
-        
-        if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
-            card.style.display = 'block';
-            foundResults = true;
-        } else {
-            card.style.display = 'none';
-        }
-    });
 
-    // Показываем сообщение если нет результатов
-    const noResults = document.getElementById('noResults');
-    if (noResults) {
-        noResults.style.display = foundResults ? 'none' : 'block';
-    }
-    
-    playSound('click');
-}
-
-// Очистка поиска
-function clearSearch() {
-    document.getElementById('searchInput').value = '';
-    searchProducts(); 
-}
 // ===== DAY/NIGHT THEME =====
 function toggleTheme() {
     const body = document.body;
@@ -781,7 +750,7 @@ function toggleSound() {
 
 // ===== PLAY SOUNDS - С ПРОВЕРКОЙ =====
 function playSound(type) {
-    if (!soundEnabled) return; // 🔥 ВЫХОДИМ ЕСЛИ ЗВУК ВЫКЛЮЧЕН
+    if (!soundEnabled) return; //
     
     try {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -818,4 +787,335 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("🔊 Sound system ready:", soundEnabled ? "ON" : "OFF");
 });
 
-// Остальные функции (addToCart, playBeepSound, testSounds) остаются без изменений
+// ===== ASSIGNMENT 7: JQUERY TASKS =====
+
+// Task 0: jQuery Ready Test
+$(document).ready(function() {
+    console.log("✅ jQuery is ready and working!");
+    
+    // Task 4: Scroll Progress Bar
+    initScrollProgressBar();
+    
+    // Task 1: jQuery Search
+    initJquerySearch();
+});
+
+// ===== TASK 4: SCROLL PROGRESS BAR =====
+function initScrollProgressBar() {
+    // Создаем прогресс-бар
+    $('body').prepend(`
+        <div class="scroll-progress-container">
+            <div class="scroll-progress-bar"></div>
+        </div>
+    `);
+    
+    const $progressBar = $('.scroll-progress-bar');
+    
+    $(window).on('scroll', function() {
+        const windowHeight = $(window).height();
+        const documentHeight = $(document).height();
+        const scrollTop = $(window).scrollTop();
+        
+        const progress = (scrollTop / (documentHeight - windowHeight)) * 100;
+        $progressBar.css('width', progress + '%');
+        
+        // Меняем цвет в зависимости от прогресса
+        if (progress < 33) {
+            $progressBar.css('background', 'linear-gradient(90deg, #28a745, #20c997)');
+        } else if (progress < 66) {
+            $progressBar.css('background', 'linear-gradient(90deg, #20c997, #17a2b8)');
+        } else {
+            $progressBar.css('background', 'linear-gradient(90deg, #17a2b8, #6f42c1)');
+        }
+    });
+}
+
+// ===== TASK 1: JQUERY SEARCH =====
+function initJquerySearch() {
+    $('#searchInput').on('keyup', function() {
+        const searchTerm = $(this).val().toLowerCase().trim();
+        const $productCards = $('.product-card');
+        let foundResults = false;
+
+        $productCards.each(function() {
+            const $card = $(this);
+            const productName = $card.find('.card-title').text().toLowerCase();
+            const productDescription = $card.find('.short-text').text().toLowerCase();
+            
+            if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
+                $card.show();
+                foundResults = true;
+            } else {
+                $card.hide();
+            }
+        });
+
+        // Показываем/скрываем сообщение "нет результатов"
+        $('#noResults').toggle(!foundResults && searchTerm.length > 0);
+    });
+}
+
+// ===== JQUERY FEATURES =====
+$(document).ready(function() {
+    console.log("✅ jQuery is ready!");
+    
+    // Анимированные счетчики
+    $('.number-counter').each(function() {
+        const $this = $(this);
+        const target = parseInt($this.data('target'));
+        let current = 0;
+        const increment = target / 100;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                $this.text(target + '+');
+                clearInterval(timer);
+            } else {
+                $this.text(Math.floor(current) + '+');
+            }
+        }, 20);
+    });
+    
+    // Прогресс-бар при скролле
+    $('body').prepend('<div class="scroll-progress"><div class="scroll-bar"></div></div>');
+    $(window).scroll(function() {
+        var scrollPercent = ($(window).scrollTop() / ($(document).height() - $(window).height())) * 100;
+        $('.scroll-bar').css('width', scrollPercent + '%');
+    });
+});
+// ===== JQUERY READY =====
+
+$(document).ready(function() {
+    console.log("✅ jQuery is ready!");
+    
+    // Task 8: Copy to Clipboard
+    initCopyToClipboard();
+});
+
+// ===== TASK 8: COPY TO CLIPBOARD =====
+function initCopyToClipboard() {
+    $('.copy-btn').on('click', function() {
+        const textToCopy = $(this).data('text');
+        
+        // Копируем в буфер обмена
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            // Меняем текст кнопки на "Скопировано!"
+            const originalText = $(this).html();
+            $(this).html('✅ Copied!');
+            $(this).addClass('btn-success').removeClass('btn-outline-success');
+            
+            // Возвращаем обратно через 2 секунды
+            setTimeout(() => {
+                $(this).html(originalText);
+                $(this).addClass('btn-outline-success').removeClass('btn-success');
+            }, 2000);
+            
+        }).catch(err => {
+            console.error('Ошибка копирования:', err);
+            alert('Не удалось скопировать текст');
+        });
+    });
+}
+// ===== TASK 6: LOADING SPINNER ON SUBMIT =====
+function initLoadingSpinner() {
+    $('#feedbackForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        const $submitBtn = $('#submitBtn');
+        const $btnText = $submitBtn.find('.btn-text');
+        const $spinner = $submitBtn.find('.spinner-border');
+        
+        console.log("🔄 Form submission started");
+        
+        // Показываем спиннер
+        $btnText.text('Sending...');
+        $spinner.removeClass('d-none');
+        $submitBtn.prop('disabled', true);
+        
+        // Симуляция отправки (2 секунды)
+        setTimeout(() => {
+            console.log("✅ Form submission completed");
+            
+            // Возвращаем кнопку в исходное состояние
+            $btnText.text('Send Message');
+            $spinner.addClass('d-none');
+            $submitBtn.prop('disabled', false);
+            
+            // ТОЛЬКО ОДНО уведомление об успехе
+            showJqueryNotification('✅ Thank you! Your message has been sent successfully!', 'success');
+            
+            // Очищаем форму
+            $('#feedbackForm')[0].reset();
+            
+        }, 2000);
+    });
+}
+$(document).ready(function() {
+    console.log("✅ jQuery is ready!");
+    
+    // Task 6: Loading Spinner
+    initLoadingSpinner();
+    
+    // ... другие функции ...
+});
+// ===== TASK 2: SEARCH AUTOCOMPLETE =====
+function initSearchAutocomplete() {
+    const products = [
+        "FC Barcelona Jersey",
+        "Soccer Ball", 
+        "Football Cleats",
+        "Real Madrid Jersey",
+        "Football Socks",
+        "Shin Guards",
+        "Barcelona",
+        "Real Madrid", 
+        "Nike",
+        "Adidas",
+        "Goalkeeper Gloves",
+        "Jersey",
+        "Cleats",
+        "Ball",
+        "Socks"
+    ];
+    
+    $('#searchInput').on('input', function() {
+        const searchTerm = $(this).val().toLowerCase().trim();
+        
+        // Удаляем старые подсказки
+        $('#autocomplete-suggestions').remove();
+        
+        if (searchTerm.length > 1) {
+            const matches = products.filter(product => 
+                product.toLowerCase().includes(searchTerm)
+            ).slice(0, 5); // Максимум 5 подсказок
+            
+            if (matches.length > 0) {
+                const $suggestions = $(`
+                    <div id="autocomplete-suggestions" class="autocomplete-suggestions">
+                        ${matches.map(match => `
+                            <div class="suggestion-item" data-product="${match}">
+                                🔍 ${match}
+                            </div>
+                        `).join('')}
+                    </div>
+                `);
+                
+                $(this).parent().append($suggestions);
+                
+                // Клик по подсказке
+                $('.suggestion-item').on('click', function() {
+                    const product = $(this).data('product');
+                    $('#searchInput').val(product);
+                    $('#autocomplete-suggestions').remove();
+                    // Запускаем поиск
+                    $('#searchInput').trigger('keyup');
+                });
+            }
+        }
+    });
+    
+    // Скрываем подсказки при клике вне
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#searchInput, #autocomplete-suggestions').length) {
+            $('#autocomplete-suggestions').remove();
+        }
+    });
+    
+    // Скрываем подсказки при нажатии Escape
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape') {
+            $('#autocomplete-suggestions').remove();
+        }
+    });
+}
+$(document).ready(function() {
+    console.log("✅ jQuery is ready!");
+    
+    // Task 2: Search Autocomplete
+    initSearchAutocomplete();
+    
+    // ... другие функции ...
+});
+// ===== TASK 7: NOTIFICATION SYSTEM =====
+function showJqueryNotification(message, type = 'success') {
+    const colors = {
+        success: '#28a745',
+        error: '#dc3545', 
+        warning: '#ffc107',
+        info: '#17a2b8'
+    };
+    
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+    
+    // Создаем уведомление
+    const $notification = $(`
+        <div class="jquery-notification">
+            <div class="notification-content">
+                <span class="notification-icon">${icons[type]}</span>
+                <span class="notification-text">${message}</span>
+                <button class="notification-close">&times;</button>
+            </div>
+            <div class="notification-progress"></div>
+        </div>
+    `);
+    
+    $notification.css({
+        'background': colors[type],
+        'border-left': `4px solid ${colors[type]}`
+    });
+    
+    // Добавляем на страницу
+    $('body').append($notification);
+    
+    // Показываем с анимацией
+    $notification.hide().slideDown(400);
+    
+    // Автоматически скрываем через 4 секунды
+    const autoRemove = setTimeout(() => {
+        removeNotification($notification);
+    }, 4000);
+    
+    // Клик для закрытия
+    $notification.find('.notification-close').on('click', function() {
+        clearTimeout(autoRemove);
+        removeNotification($notification);
+    });
+    
+    // Клик на всё уведомление для закрытия
+    $notification.on('click', function(e) {
+        if (!$(e.target).hasClass('notification-close')) {
+            clearTimeout(autoRemove);
+            removeNotification($notification);
+        }
+    });
+}
+
+// Функция для плавного удаления уведомления
+function removeNotification($notification) {
+    $notification.slideUp(300, function() {
+        $(this).remove();
+    });
+}
+
+// Функции для быстрого вызова уведомлений
+function showSuccessNotification(message) {
+    showJqueryNotification(message, 'success');
+}
+
+function showErrorNotification(message) {
+    showJqueryNotification(message, 'error');
+}
+
+function showWarningNotification(message) {
+    showJqueryNotification(message, 'warning');
+}
+
+function showInfoNotification(message) {
+    showJqueryNotification(message, 'info');
+}

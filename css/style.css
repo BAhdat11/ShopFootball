@@ -975,3 +975,265 @@ body.dark-theme .main-footer {
 .dark-theme .btn:hover {
     box-shadow: 0 5px 15px rgba(255,255,255,0.1);
 }
+/* ===== JQUERY FEATURES ===== */
+
+/* Scroll Progress Bar */
+.scroll-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: rgba(0,0,0,0.1);
+    z-index: 9999;
+}
+
+.scroll-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    transition: width 0.1s ease;
+    border-radius: 0 2px 2px 0;
+}
+
+/* Dark theme support */
+body.dark-theme .scroll-progress-container {
+    background: rgba(255,255,255,0.1);
+}
+/* ===== TASK 7: NOTIFICATION SYSTEM ===== */
+.jquery-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10000;
+    min-width: 300px;
+    max-width: 400px;
+    cursor: pointer;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.jquery-notification.show {
+    transform: translateX(0);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification-icon {
+    font-size: 18px;
+}
+
+.notification-text {
+    flex: 1;
+    font-weight: 500;
+}
+
+.notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.7);
+    width: 100%;
+    animation: notificationProgress 4s linear;
+}
+
+@keyframes notificationProgress {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+/* Dark theme support */
+body.dark-theme .jquery-notification {
+    background: #2d2d2d;
+    border: 1px solid #444;
+}
+/* ===== TASK 5: ANIMATED NUMBER COUNTER ===== */
+.stat-item {
+    padding: 20px;
+}
+
+.stat-item h3 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.stat-item p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.dark-theme .stat-item p {
+    color: #ccc;
+}
+/* Анимация для уведомления корзины */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Темная тема для уведомлений */
+body.dark-theme .cart-notification {
+    background: #2d2d2d !important;
+    border: 1px solid #444;
+}
+
+/* ===== TASK 2: SEARCH AUTOCOMPLETE ===== */
+.autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.suggestion-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #f8f9fa;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+/* Для темной темы */
+body.dark-theme .autocomplete-suggestions {
+    background: #2d2d2d;
+    border-color: #444;
+}
+
+body.dark-theme .suggestion-item {
+    border-color: #444;
+    color: white;
+}
+
+body.dark-theme .suggestion-item:hover {
+    background-color: #3d3d3d;
+}
+/* ===== TASK 7: NOTIFICATION SYSTEM ===== */
+.jquery-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: white;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    z-index: 10000;
+    min-width: 300px;
+    max-width: 400px;
+    cursor: pointer;
+    overflow: hidden;
+    transform: translateX(400px);
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.jquery-notification.show {
+    transform: translateX(0);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    position: relative;
+}
+
+.notification-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.notification-text {
+    flex: 1;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+}
+
+.notification-close:hover {
+    opacity: 1;
+    background: rgba(255,255,255,0.1);
+}
+
+.notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.8);
+    width: 100%;
+    animation: notificationProgress 4s linear forwards;
+}
+
+@keyframes notificationProgress {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+/* Анимация появления */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Для темной темы */
+body.dark-theme .jquery-notification {
+    background: #2d2d2d !important;
+    border: 1px solid #444;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
