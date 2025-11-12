@@ -1,62 +1,31 @@
 FootballStore - Online Football Gear Shop
-About The Project
-FootballStore is a modern online shop for football jerseys, equipment, and accessories. This is an educational project demonstrating web development skills.
+Live Website
+🌐 View Live: [https://yourusername.github.io/FootballStore](https://bahdat11.github.io/ShopFootball/)
 
-Main Features
-Shopping
+About
+FootballStore is a modern online shop for football jerseys, equipment, and accessories. This educational project demonstrates web development with HTML, CSS, JavaScript, and Bootstrap.
+
+Features
 Product catalog with search and filters
 
-Shopping cart with save feature
+Shopping cart with local storage
 
-Product gallery with photos
+User registration and profiles
 
-Size selection for jerseys
+Light/dark theme toggle
 
-For Users
-User registration and login
-
-Personal profile page
-
-Light and dark theme
-
-Sound effects toggle
-
-Football Features
-Premier League standings table
-
-Football news section
-
-Team-based products
-
-Technology Used
-HTML5, CSS3, JavaScript
-
-Bootstrap 5 for design
-
-Local storage for data
+Premier League standings
 
 Responsive design for all devices
 
-Project Structure
-Homepage with featured products
+Technology
+HTML5, CSS3, JavaScript
 
-Product catalog page
+Bootstrap 5
 
-Shopping cart page
+Local Storage API
 
-User profile page
-
-About us page
-
-Contact page
-
-FAQ page
-
-Gallery page
+Responsive Design
 
 Team
-Team Olimp:
-
-Bagdat A.
-
-Daniyal E.
+Team Olimp: Bagdat A. & Daniyal E.
