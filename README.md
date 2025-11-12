@@ -1,6 +1,6 @@
 FootballStore - Online Football Gear Shop
 Live Website
-🌐 View Live: [https://yourusername.github.io/FootballStore](https://bahdat11.github.io/ShopFootball/)
+🌐 View Live: https://bahdat11.github.io/ShopFootball/
 
 About
 FootballStore is a modern online shop for football jerseys, equipment, and accessories. This educational project demonstrates web development with HTML, CSS, JavaScript, and Bootstrap.
