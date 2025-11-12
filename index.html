@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
@@ -28,6 +29,7 @@
                 <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
                 <li class="nav-item"><a class="nav-link" href="cart.html">Cart 🛒</a></li>
                 <li class="nav-item">
+                
     <button class="nav-link btn btn-link text-white" onclick="toggleSound()">
         <span id="soundIcon">🔊</span> Sound
     </button>
@@ -43,6 +45,12 @@
         </button>
     </li>
 </nav>
+<!-- Authentication Modal Trigger -->
+<li class="nav-item">
+    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#authModal">
+        👤 Login
+    </a>
+</li>
                 <li class="nav-item">
     <button class="nav-link btn btn-link text-white" onclick="changeBackgroundColor()">
         🎨 Change Color
@@ -51,7 +59,10 @@
                 </ul>
             </div>
         </div>
+    
     </nav>
+    
+
     
     
 
@@ -72,13 +83,6 @@
         </div>
         
         
-<div class="container text-center my-5">
-    <button class="btn btn-outline-success btn-lg" data-bs-toggle="modal" data-bs-target="#subscriptionModal">
-        📧 Subscribe to Newsletter
-    </button>
-</div>
-
-
 
 <!-- Subscription Modal -->
 <div class="modal fade" id="subscriptionModal" tabindex="-1">
@@ -206,6 +210,44 @@
             </div>
         </section>
     </main>
+    <!-- Premier League Standings Section -->
+<section class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">🏆 Premier League Standings</h4>
+                    <button class="btn btn-light btn-sm" onclick="toggleStandings()" id="standingsToggle">
+                        📊 Show Table
+                    </button>
+                </div>
+                <div class="card-body" id="standingsBody" style="display: none;">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Position</th>
+                                    <th>Team</th>
+                                    <th>Points</th>
+                                </tr>
+                            </thead>
+                            <tbody id="league-table">
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        <div class="spinner-border text-success" role="status">
+                                            <span class="visually-hidden">Loading standings...</span>
+                                        </div>
+                                        <p class="mt-2">Loading Premier League table...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
     <footer class="main-footer">
         <div class="team-members">
@@ -217,6 +259,89 @@
     </footer>
 
     <script src="jv/script.js"></script>
-    
+    <!-- Authentication Modal -->
+<div class="modal fade" id="authModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Welcome to FootballStore</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-pills nav-justified mb-3">
+          <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#loginTab">Login</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#registerTab">Sign Up</button>
+          </li>
+        </ul>
+        
+        
+        <div class="tab-content">
+          <!-- Login Form -->
+          <div class="tab-pane fade show active" id="loginTab">
+            <form id="loginForm">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="loginEmail" required>
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" required>
+              </div>
+              <button type="submit" class="btn btn-success w-100">Login</button>
+            </form>
+          </div>
+          
+          <!-- Register Form -->
+          <div class="tab-pane fade" id="registerTab">
+            <form id="registerForm">
+              <div class="mb-3">
+                <label for="regName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="regName" required>
+              </div>
+              <div class="mb-3">
+                <label for="regEmail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="regEmail" required>
+              </div>
+              <div class="mb-3">
+                <label for="regPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="regPassword" minlength="6" required>
+                <div class="form-text">Password must be at least 6 characters</div>
+              </div>
+              <div class="mb-3">
+                <label for="regPhone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="regPhone" placeholder="+7-xxx-xxx-xx-xx" required>
+              </div>
+              <button type="submit" class="btn btn-success w-100">Create Account</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("http://localhost:3000/apl") // теперь запрос идёт через твой прокси
+        .then(res => res.json())
+        .then(data => {
+            const table = data.standings[0].table;
+            const tbody = document.getElementById("league-table");
+            table.forEach(team => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${team.position}</td>
+                        <td>${team.team.name}</td>
+                        <td>${team.points}</td>
+                    </tr>
+                `;
+            });
+        })
+        .catch(err => console.error("Ошибка при загрузке таблицы:", err));
+});
+</script>
+
 </body>
 </html>

@@ -503,6 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // ===== DAY/NIGHT THEME =====
+// ===== IMPROVED DAY/NIGHT THEME =====
 function toggleTheme() {
     const body = document.body;
     const themeIcon = document.getElementById('themeIcon');
@@ -512,43 +513,41 @@ function toggleTheme() {
         body.classList.remove('dark-theme');
         themeIcon.textContent = '🌙';
         localStorage.setItem('theme', 'light');
+        console.log('Switched to light theme');
     } else {
         // Switch to dark theme
         body.classList.add('dark-theme');
         themeIcon.textContent = '☀️';
         localStorage.setItem('theme', 'dark');
+        console.log('Switched to dark theme');
     }
 }
 
-// Load saved theme on page load
+// Load saved theme on page load with better initialization
 document.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('theme');
+    const body = document.body;
+    
     if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        document.getElementById('themeIcon').textContent = '☀️';
-    }
-});
-// ===== READ MORE BUTTON =====
-function toggleReadMore(button) {
-    const description = button.closest('.product-description');
-    const shortText = description.querySelector('.short-text');
-    const fullText = description.querySelector('.full-text');
-    const isExpanded = fullText.style.display === 'block';
-    
-    if (isExpanded) {
-        // Collapse
-        fullText.style.display = 'none';
-        shortText.style.display = 'block';
-        button.textContent = 'Read More ▼';
+        body.classList.add('dark-theme');
+        const themeIcon = document.getElementById('themeIcon');
+        if (themeIcon) {
+            themeIcon.textContent = '☀️';
+        }
+        console.log('Loaded dark theme from storage');
     } else {
-        // Expand
-        fullText.style.display = 'block';
-        shortText.style.display = 'none';
-        button.textContent = 'Read Less ▲';
+        // Ensure light theme is properly set
+        body.classList.remove('dark-theme');
+        console.log('Loaded light theme');
     }
     
-    
-}
+    // Force re-render of all elements
+    setTimeout(() => {
+        document.body.style.display = 'none';
+        document.body.offsetHeight; // Trigger reflow
+        document.body.style.display = '';
+    }, 10);
+});
 // ===== RESET FORM BUTTON =====
 function resetContactForm() {
     document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(input => {
@@ -593,52 +592,98 @@ document.addEventListener('keydown', function(event) {
             break;
     }
 });
-// ===== PRODUCT FILTERING WITH SWITCH =====
+// ===== ИСПРАВЛЕННАЯ ФИЛЬТРАЦИЯ =====
+let originalProducts = null; // Сохраняем оригинальные товары
+
 function filterProducts(category) {
-    const products = document.querySelectorAll('.product-card');
+    const $allRows = $('.row');
+    const $productsRow = $allRows.eq(2);
     
-    // Обновляем активную кнопку
-    document.querySelectorAll('.filters .btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
+    // Сохраняем оригинальные товары при первом вызове
+    if (!originalProducts) {
+        originalProducts = $('.product-card').parent().clone();
+    }
     
-    // Фильтрация через switch statement
-    products.forEach(product => {
+    $('.filters .btn').removeClass('active');
+    $(event.target).addClass('active');
+    
+    let visibleProducts = [];
+    
+    // Фильтруем из ОРИГИНАЛЬНЫХ товаров
+    originalProducts.each(function() {
+        const $card = $(this).clone(); // Клонируем элемент
+        const productName = $card.find('.card-title').text();
         let showProduct = false;
         
         switch(category) {
-            case 'all':
-                showProduct = true;
+            case 'all': 
+                showProduct = true; 
                 break;
-                
-            case 'jerseys':
-                showProduct = product.querySelector('.card-title').textContent.includes('Jersey') || 
-                             product.querySelector('.card-title').textContent.includes('Kit');
+            case 'jerseys': 
+                showProduct = productName.includes('Jersey') || productName.includes('Kit'); 
                 break;
-                
-            case 'balls':
-                showProduct = product.querySelector('.card-title').textContent.includes('Ball');
+            case 'balls': 
+                showProduct = productName.includes('Ball'); 
                 break;
-                
-            case 'cleats':
-                showProduct = product.querySelector('.card-title').textContent.includes('Cleats');
+            case 'cleats': 
+                showProduct = productName.includes('Cleats'); 
                 break;
-                
-            case 'accessories':
-                showProduct = product.querySelector('.card-title').textContent.includes('Socks') || 
-                             product.querySelector('.card-title').textContent.includes('Guards');
+            case 'accessories': 
+                showProduct = productName.includes('Socks') || productName.includes('Guards'); 
                 break;
-                
-            default:
+            default: 
                 showProduct = true;
         }
         
-        product.style.display = showProduct ? 'block' : 'none';
+        if (showProduct) {
+            visibleProducts.push($card);
+        }
     });
+    
+    // Очищаем и добавляем отфильтрованные товары
+    $productsRow.empty();
+    visibleProducts.forEach($product => {
+        $productsRow.append($product);
+    });
+    
+    // Восстанавливаем обработчики событий
+    restoreEventHandlers();
     
     playSound('click');
 }
+
+// Восстанавливаем обработчики событий
+function restoreEventHandlers() {
+    // Обработчики для кнопок "Add to Cart"
+    $('.btn-success[onclick*="addToCart"]').off('click').on('click', function() {
+        const match = this.onclick.toString().match(/addToCart\('([^']+)',\s*(\d+)\)/);
+        if (match) {
+            addToCart(match[1], parseInt(match[2]));
+        }
+    });
+    
+    // Обработчики для кнопок "Read More"
+    $('.read-more-btn').off('click').on('click', function() {
+        toggleReadMore(this);
+    });
+}
+
+// Восстанавливаем обработчики событий
+function restoreEventHandlers() {
+    // Обработчики для кнопок "Add to Cart"
+    $('.btn-success[onclick*="addToCart"]').off('click').on('click', function() {
+        const match = this.onclick.toString().match(/addToCart\('([^']+)',\s*(\d+)\)/);
+        if (match) {
+            addToCart(match[1], parseInt(match[2]));
+        }
+    });
+    
+    // Обработчики для кнопок "Read More"
+    $('.read-more-btn').off('click').on('click', function() {
+        toggleReadMore(this);
+    });
+}
+
 // ===== PLAY SOUNDS - ТОЛЬКО НУЖНЫЕ ЗВУКИ =====
 function playSound(type) {
     try {
@@ -830,27 +875,47 @@ function initScrollProgressBar() {
     });
 }
 
-// ===== TASK 1: JQUERY SEARCH =====
+// ===== ИСПРАВЛЕННЫЙ ПОИСК =====
 function initJquerySearch() {
     $('#searchInput').on('keyup', function() {
         const searchTerm = $(this).val().toLowerCase().trim();
-        const $productCards = $('.product-card');
+        const $allRows = $('.row');
+        const $productsRow = $allRows.eq(2);
+        
+        if (!originalProducts) {
+            originalProducts = $('.product-card').parent().clone();
+        }
+        
         let foundResults = false;
+        let visibleProducts = [];
 
-        $productCards.each(function() {
-            const $card = $(this);
-            const productName = $card.find('.card-title').text().toLowerCase();
-            const productDescription = $card.find('.short-text').text().toLowerCase();
-            
-            if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
-                $card.show();
-                foundResults = true;
-            } else {
-                $card.hide();
-            }
+        if (searchTerm.length > 0) {
+            // Поиск по оригинальным товарам
+            originalProducts.each(function() {
+                const $card = $(this).clone();
+                const productName = $card.find('.card-title').text().toLowerCase();
+                const productDescription = $card.find('.short-text').text().toLowerCase();
+                
+                if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
+                    foundResults = true;
+                    visibleProducts.push($card);
+                }
+            });
+        } else {
+            // Если поиск пустой - показываем все оригинальные товары
+            originalProducts.each(function() {
+                visibleProducts.push($(this).clone());
+            });
+            foundResults = true;
+        }
+
+        // Обновляем отображение
+        $productsRow.empty();
+        visibleProducts.forEach($product => {
+            $productsRow.append($product);
         });
-
-        // Показываем/скрываем сообщение "нет результатов"
+        
+        restoreEventHandlers();
         $('#noResults').toggle(!foundResults && searchTerm.length > 0);
     });
 }
@@ -1037,64 +1102,7 @@ $(document).ready(function() {
     
     // ... другие функции ...
 });
-// ===== TASK 7: NOTIFICATION SYSTEM =====
-function showJqueryNotification(message, type = 'success') {
-    const colors = {
-        success: '#28a745',
-        error: '#dc3545', 
-        warning: '#ffc107',
-        info: '#17a2b8'
-    };
-    
-    const icons = {
-        success: '✅',
-        error: '❌',
-        warning: '⚠️',
-        info: 'ℹ️'
-    };
-    
-    // Создаем уведомление
-    const $notification = $(`
-        <div class="jquery-notification">
-            <div class="notification-content">
-                <span class="notification-icon">${icons[type]}</span>
-                <span class="notification-text">${message}</span>
-                <button class="notification-close">&times;</button>
-            </div>
-            <div class="notification-progress"></div>
-        </div>
-    `);
-    
-    $notification.css({
-        'background': colors[type],
-        'border-left': `4px solid ${colors[type]}`
-    });
-    
-    // Добавляем на страницу
-    $('body').append($notification);
-    
-    // Показываем с анимацией
-    $notification.hide().slideDown(400);
-    
-    // Автоматически скрываем через 4 секунды
-    const autoRemove = setTimeout(() => {
-        removeNotification($notification);
-    }, 4000);
-    
-    // Клик для закрытия
-    $notification.find('.notification-close').on('click', function() {
-        clearTimeout(autoRemove);
-        removeNotification($notification);
-    });
-    
-    // Клик на всё уведомление для закрытия
-    $notification.on('click', function(e) {
-        if (!$(e.target).hasClass('notification-close')) {
-            clearTimeout(autoRemove);
-            removeNotification($notification);
-        }
-    });
-}
+
 
 // Функция для плавного удаления уведомления
 function removeNotification($notification) {
@@ -1118,4 +1126,584 @@ function showWarningNotification(message) {
 
 function showInfoNotification(message) {
     showJqueryNotification(message, 'info');
+}
+// ===== SIZE SELECTION FUNCTIONALITY =====
+function initSizeSelection() {
+    // Обработчик для кнопок размеров
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-outline-success') && 
+            e.target.closest('.btn-group')) {
+            
+            const btnGroup = e.target.closest('.btn-group');
+            const allButtons = btnGroup.querySelectorAll('.btn');
+            const clickedSize = e.target.textContent.trim();
+            
+            // Убираем активный класс у всех кнопок в группе
+            allButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-outline-success');
+            });
+            
+            // Добавляем активный класс к нажатой кнопке
+            e.target.classList.remove('btn-outline-success');
+            e.target.classList.add('btn-success', 'active');
+            
+            // Сохраняем выбранный размер в data-атрибут карточки
+            const productCard = btnGroup.closest('.product-card');
+            if (productCard) {
+                productCard.setAttribute('data-selected-size', clickedSize);
+            }
+            
+            console.log(`Selected size: ${clickedSize}`);
+            playSound('click');
+        }
+    });
+}
+
+// ===== UPDATE ADD TO CART TO INCLUDE SIZE =====
+function addToCart(name, price) {
+    const productCard = event.target.closest('.product-card');
+    let selectedSize = 'Default';
+    
+    if (productCard) {
+        selectedSize = productCard.getAttribute('data-selected-size') || 'Default';
+    }
+    
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Ищем товар с таким же названием И размером
+    let item = cart.find(item => item.name === name && item.size === selectedSize);
+    
+    if (item) {
+        item.quantity += 1;
+    } else {
+        cart.push({ 
+            name: name, 
+            price: price, 
+            quantity: 1,
+            size: selectedSize
+        });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCounter();
+    
+    // Анимация кнопки
+    animateAddToCart(event.target);
+    
+    showSimpleNotification(`🛒 ${name} (${selectedSize}) добавлен в корзину!`);
+}
+
+// ===== UPDATE CART DISPLAY TO SHOW SIZES =====
+function displayCart() {
+    let container = document.getElementById('cartItemsContainer');
+    if (!container) return;
+    
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    if (cart.length === 0) {
+        container.innerHTML = '<p class="text-center">Your cart is empty</p>';
+        updateSummary(cart);
+        return;
+    }
+    
+    let html = '';
+    cart.forEach(item => {
+        let total = item.price * item.quantity;
+        let sizeInfo = item.size && item.size !== 'Default' ? ` • Size: ${item.size}` : '';
+        
+        html += `
+            <div class="cart-item border-bottom pb-3 mb-3">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <h5>${item.name}</h5>
+                        <p>${item.price} KZT × ${item.quantity}${sizeInfo}</p>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-sm btn-outline-success" onclick="changeQty('${item.name}', '${item.size}', -1)">-</button>
+                        <span class="mx-2">${item.quantity}</span>
+                        <button class="btn btn-sm btn-outline-success" onclick="changeQty('${item.name}', '${item.size}', 1)">+</button>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-danger btn-sm" onclick="removeItem('${item.name}', '${item.size}')">×</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    updateSummary(cart);
+}
+
+// ===== UPDATE CART FUNCTIONS FOR SIZES =====
+function changeQty(name, size, change) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let item = cart.find(item => item.name === name && item.size === size);
+    
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            cart = cart.filter(i => !(i.name === name && i.size === size));
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+        updateCartCounter();
+    }
+}
+
+function removeItem(name, size) {
+    if (confirm(`Remove ${name}${size && size !== 'Default' ? ` (Size: ${size})` : ''}?`)) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = cart.filter(item => !(item.name === name && item.size === size));
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+        updateCartCounter();
+    }
+}
+// ===== INITIALIZE ALL FUNCTIONALITY =====
+document.addEventListener('DOMContentLoaded', function() {
+    updateDateTime();
+    updateCartCounter();
+    displayCart();
+    initSizeSelection(); // ← ДОБАВЬ ЭТУ СТРОЧКУ
+    
+    // Остальной код инициализации...
+    setInterval(updateDateTime, 60000);
+});
+// ===== FIXED READ MORE FUNCTION =====
+function toggleReadMore(button) {
+    console.log("Read More clicked"); // Для дебага
+    
+    const description = button.closest('.product-description');
+    if (!description) {
+        console.error("Product description not found");
+        return;
+    }
+    
+    const shortText = description.querySelector('.short-text');
+    const fullText = description.querySelector('.full-text');
+    
+    if (!shortText || !fullText) {
+        console.error("Short text or full text not found");
+        return;
+    }
+    
+    const isExpanded = fullText.style.display === 'block';
+    
+    if (isExpanded) {
+        // Collapse
+        fullText.style.display = 'none';
+        shortText.style.display = 'block';
+        button.textContent = 'Read More ▼';
+        button.setAttribute('aria-expanded', 'false');
+    } else {
+        // Expand
+        fullText.style.display = 'block';
+        shortText.style.display = 'none';
+        button.textContent = 'Read Less ▲';
+        button.setAttribute('aria-expanded', 'true');
+    }
+    
+    // Анимация
+    button.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+        button.style.transform = 'scale(1)';
+    }, 200);
+    
+    playSound('click');
+}
+
+//INITIALIZE READ MORE BUTTONS
+function initReadMoreButtons() {
+    console.log("Initializing Read More buttons...");
+    
+    
+    $('.read-more-btn').off('click');
+    
+    
+    $('.read-more-btn').on('click', function() {
+        toggleReadMore(this);
+    });
+    
+    console.log(`Found ${$('.read-more-btn').length} Read More buttons`);
+}
+// ===== AUTHENTICATION SYSTEM =====
+let currentUser = null;
+
+// Initialize auth system
+function initAuth() {
+    loadCurrentUser();
+    updateAuthUI();
+}
+
+// Load user from localStorage
+function loadCurrentUser() {
+    const userData = localStorage.getItem('currentUser');
+    if (userData) {
+        currentUser = JSON.parse(userData);
+    }
+}
+
+// Update UI based on auth status
+function updateAuthUI() {
+    const loginBtn = document.querySelector('a[data-bs-target="#authModal"]');
+    if (loginBtn) {
+        if (currentUser) {
+            loginBtn.innerHTML = `👤 ${currentUser.name}`;
+            loginBtn.setAttribute('href', 'profile.html');
+            loginBtn.removeAttribute('data-bs-toggle');
+            loginBtn.removeAttribute('data-bs-target');
+        } else {
+            loginBtn.innerHTML = '👤 Login';
+            loginBtn.setAttribute('href', '#');
+            loginBtn.setAttribute('data-bs-toggle', 'modal');
+            loginBtn.setAttribute('data-bs-target', '#authModal');
+        }
+    }
+}
+
+// Register new user
+function registerUser(name, email, password, phone) {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    
+    // Check if user already exists
+    if (users.find(user => user.email === email)) {
+        alert('User with this email already exists!');
+        return false;
+    }
+    
+    // Create new user
+    const newUser = {
+        id: Date.now(),
+        name: name,
+        email: email,
+        password: password, // In real app, hash this!
+        phone: phone,
+        joinDate: new Date().toISOString()
+    };
+    
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    
+    // Auto login after registration
+    loginUser(email, password);
+    return true;
+}
+
+// Login user
+function loginUser(email, password) {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        updateAuthUI();
+        
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+        if (modal) modal.hide();
+        
+        alert(`Welcome back, ${user.name}!`);
+        return true;
+    } else {
+        alert('Invalid email or password!');
+        return false;
+    }
+}
+
+// Logout user
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('currentUser');
+    updateAuthUI();
+    alert('You have been logged out.');
+    window.location.href = 'index.html';
+}
+
+// Form validation
+function validateRegistration(name, email, password, phone) {
+    if (name.length < 2) {
+        alert('Name must be at least 2 characters long');
+        return false;
+    }
+    
+    if (!validateEmail(email)) {
+        alert('Please enter a valid email address');
+        return false;
+    }
+    
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters long');
+        return false;
+    }
+    
+    if (!validatePhone(phone)) {
+        alert('Please enter a valid phone number');
+        return false;
+    }
+    
+    return true;
+}
+// Initialize auth when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initAuth();
+    
+    // Login form handler
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            loginUser(email, password);
+        });
+    }
+    
+    // Register form handler
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const phone = document.getElementById('regPhone').value;
+            
+            if (validateRegistration(name, email, password, phone)) {
+                registerUser(name, email, password, phone);
+            }
+        });
+    }
+});
+// ===== PROFILE MANAGEMENT =====
+
+// Load and display profile data
+function loadProfile() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const profileContent = document.getElementById('profileContent');
+    
+    if (!currentUser) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    const profileHTML = `
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="30%">Name:</th>
+                        <td>${currentUser.name}</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>${currentUser.email}</td>
+                    </tr>
+                    <tr>
+                        <th>Phone:</th>
+                        <td>${currentUser.phone}</td>
+                    </tr>
+                    <tr>
+                        <th>Member since:</th>
+                        <td>${new Date(currentUser.joinDate).toLocaleDateString()}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="profile-avatar bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" 
+                     style="width: 80px; height: 80px; font-size: 2rem;">
+                    ${currentUser.name.charAt(0).toUpperCase()}
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <button class="btn btn-outline-success" onclick="editProfile()">✏️ Edit Profile</button>
+            <button class="btn btn-outline-danger ms-2" onclick="logout()">🚪 Logout</button>
+        </div>
+    `;
+    
+    if (profileContent) {
+        profileContent.innerHTML = profileHTML;
+    }
+    
+    loadOrderHistory();
+    loadUserRatings();
+}
+
+// Load order history
+function loadOrderHistory() {
+    const orders = JSON.parse(localStorage.getItem('userOrders')) || [];
+    const orderHistory = document.getElementById('orderHistory');
+    
+    if (orders.length === 0) {
+        return;
+    }
+    
+    const ordersHTML = orders.map(order => `
+        <div class="order-item border-bottom pb-3 mb-3">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <strong>Order #${order.id}</strong>
+                    <br>
+                    <small class="text-muted">Date: ${new Date(order.date).toLocaleDateString()}</small>
+                </div>
+                <div class="text-end">
+                    <strong>${order.total.toLocaleString()} KZT</strong>
+                    <br>
+                    <span class="badge bg-success">${order.status}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    if (orderHistory) {
+        orderHistory.innerHTML = ordersHTML;
+    }
+}
+
+// Load user ratings
+function loadUserRatings() {
+    const allRatings = JSON.parse(localStorage.getItem('productRatings')) || [];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const userRatings = document.getElementById('userRatings');
+    
+    if (!currentUser) return;
+    
+    const userRatingsList = allRatings.filter(rating => rating.userId === currentUser.id);
+    
+    if (userRatingsList.length === 0) {
+        return;
+    }
+    
+    const ratingsHTML = userRatingsList.map(rating => `
+        <div class="rating-item border-bottom pb-2 mb-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>${rating.productName}</strong>
+                    <div class="stars">
+                        ${'⭐'.repeat(rating.rating)}${'☆'.repeat(5-rating.rating)}
+                    </div>
+                </div>
+                <small class="text-muted">${new Date(rating.date).toLocaleDateString()}</small>
+            </div>
+            ${rating.comment ? `<p class="mb-0 mt-1"><em>"${rating.comment}"</em></p>` : ''}
+        </div>
+    `).join('');
+    
+    if (userRatings) {
+        userRatings.innerHTML = ratingsHTML;
+    }
+}
+
+// Edit profile function
+function editProfile() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    const newName = prompt('Enter new name:', currentUser.name);
+    const newPhone = prompt('Enter new phone:', currentUser.phone);
+    
+    if (newName && newPhone) {
+        // Update user data
+        currentUser.name = newName;
+        currentUser.phone = newPhone;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        // Update in users list
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const userIndex = users.findIndex(u => u.id === currentUser.id);
+        if (userIndex !== -1) {
+            users[userIndex] = currentUser;
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        
+        alert('Profile updated successfully!');
+        loadProfile();
+        updateAuthUI();
+    }
+}
+
+// Protect profile page
+function checkAuth() {
+    const currentUser = localStorage.getItem('currentUser');
+    if (!currentUser && window.location.pathname.includes('profile.html')) {
+        window.location.href = 'index.html';
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication for profile page
+    checkAuth();
+    
+    // Load profile if on profile page
+    if (window.location.pathname.includes('profile.html')) {
+        loadProfile();
+    }
+    
+    // Rest of your existing code...
+    initAuth();
+    // ... остальной код
+});
+// ===== TOGGLE STANDINGS VISIBILITY =====
+let standingsLoaded = false;
+
+function toggleStandings() {
+    const standingsBody = document.getElementById("standingsBody");
+    const toggleBtn = document.getElementById("standingsToggle");
+    
+    if (standingsBody.style.display === "none") {
+        // Show standings
+        standingsBody.style.display = "block";
+        toggleBtn.textContent = "📊 Hide Table";
+        
+        // Load data only once
+        if (!standingsLoaded) {
+            loadStandingsData();
+            standingsLoaded = true;
+        }
+    } else {
+        // Hide standings
+        standingsBody.style.display = "none";
+        toggleBtn.textContent = "📊 Show Table";
+    }
+}
+
+function loadStandingsData() {
+    fetch("http://localhost:3000/apl")
+        .then(res => res.json())
+        .then(data => {
+            const table = data.standings[0].table;
+            const tbody = document.getElementById("league-table");
+            
+            tbody.innerHTML = ''; // Clear loading spinner
+            
+            table.forEach(team => {
+                tbody.innerHTML += `
+                    <tr class="${team.position <= 4 ? 'table-success' : team.position >= 18 ? 'table-danger' : ''}">
+                        <td><strong>${team.position}</strong></td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="${team.team.crest}" 
+                                     alt="${team.team.name}" 
+                                     style="width: 24px; height: 24px; margin-right: 10px;"
+                                     onerror="this.style.display='none'">
+                                ${team.team.name}
+                            </div>
+                        </td>
+                        <td><strong class="text-success">${team.points}</strong></td>
+                    </tr>
+                `;
+            });
+        })
+        .catch(err => {
+            console.error("Ошибка при загрузке таблицы:", err);
+            document.getElementById("league-table").innerHTML = `
+                <tr>
+                    <td colspan="3" class="text-center text-danger">
+                        ❌ Failed to load standings. Make sure proxy server is running on localhost:3000
+                    </td>
+                </tr>
+            `;
+        });
 }
